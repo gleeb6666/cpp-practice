@@ -18,7 +18,7 @@ bool inputArray(int arr[max_n], int& n) {
         cout << "Invalid length!\n";
         return false;
     }
-
+    
     cout << "Enter your array elements (type 'stop' to finish early): ";
     while (count < n) {
         cin >> input;
@@ -35,6 +35,15 @@ bool inputArray(int arr[max_n], int& n) {
     return true;
 }
 
+bool checkArray(bool isArrayEntered) {
+    if (!isArrayEntered) {
+        cout << "Array is empty. Please choose option 1 first.\n";
+        return false;
+    }
+    return true;
+}
+
+
 void printArray(int arr[max_n], int n) {
     for (int i = 0; i < n; i++) {
         cout << arr[i] << ' ';
@@ -48,15 +57,22 @@ int sumArray(int arr[max_n], int n) {
     return sum;
 }
 
-void minMax(int arr[max_n], int n) {
-    if (n == 0) return;
-    int minVal = arr[0], maxVal = arr[0];
+int MaxVal(int arr[max_n], int n) {
+    if (n == 0) return 0;
+    int maxval = arr[0];
     for (int i = 1; i < n; i++) {
-        if (arr[i] < minVal) minVal = arr[i];
-        if (arr[i] > maxVal) maxVal = arr[i];
+     
+        if (arr[i] > maxval) maxval = arr[i];
     }
-    cout << "Max element: " << maxVal << endl;
-    cout << "Min element: " << minVal << endl;
+    return maxval;
+}
+int MinVal(int arr[max_n], int n){
+    if (n == 0) return 0;
+    int minval = arr[0];
+    for (int i = 1; i < n; i++) {
+        if (arr[i] < minval) minval = arr[i];
+    }
+    return minval;
 }
 
 double averageArray(int arr[max_n], int n) {
@@ -87,6 +103,45 @@ int maxAscendingSubsequence(int arr[max_n], int n) {
     return maxsub;
 }
 
+void ClearArray(int arr[max_n], int n) {
+    for (int i = 0; i < n; i++) {
+        arr[i] = 0;
+    }
+}
+
+void pause() {
+    cout << "\nPress Enter to continue...";
+    cin.ignore(10000, '\n');
+    cin.get();
+}
+
+void ReverseArray(int arr[max_n], int n) {
+    for (int i = 0; i < n / 2; i++) {
+        int temp = arr[i];
+        arr[i] = arr[n - 1 - i];
+        arr[n - 1 - i] = temp;
+    }
+}
+void sort(int arr[max_n], int n) {
+    if (n <= 1) return;
+    int pivot = arr[n / 2];
+    int arrleft[max_n], arrright[max_n];
+    int leftCount = 0, rightCount = 0;
+    for (int i = 0; i < n; i++) {
+        if (i == n / 2) continue;
+        if (arr[i] < pivot) arrleft[leftCount++] = arr[i];
+        else arrright[rightCount++] = arr[i];
+    }
+    sort(arrleft, leftCount);
+    sort(arrright, rightCount);
+    int index = 0;
+    for (int i = 0; i < leftCount; i++) arr[index++] = arrleft[i];
+    arr[index++] = pivot;
+    for (int i = 0; i < rightCount; i++) arr[index++] = arrright[i];
+}
+
+
+
 int main() {
     int arr[max_n] = {};
     int action;
@@ -99,6 +154,9 @@ int main() {
         cout << "4. Max and Min\n";
         cout << "5. Average\n";
         cout << "6. Maximum ascending subsequence\n";
+        cout << "7. Reverse array\n";
+        cout << "8. Sort array\n";
+        cout << "9. Clear array\n";
         cout << "0. Exit\n";
 
         cout << "Choose action: ";
@@ -116,51 +174,68 @@ int main() {
         switch (action) {
         case 1:
             isArrayEntered = inputArray(arr, n);
+            pause();
             break;
 
         case 2:
-            if (!isArrayEntered) {
-                cout << "Array is empty. Please choose option 1 first.\n";
-                continue;
-            }
+            if (!checkArray(isArrayEntered)) continue;
             cout << "Your array: ";
             printArray(arr, n);
+            pause();
             break;
 
         case 3:
-            if (!isArrayEntered) {
-                cout << "Array is empty. Please choose option 1 first.\n";
-                continue;
-            }
+            if (!checkArray(isArrayEntered)) continue;
             cout << "Sum of elements: " << sumArray(arr, n) << endl;
+            pause();
             break;
 
         case 4:
-            if (!isArrayEntered) {
-                cout << "Array is empty. Please choose option 1 first.\n";
-                continue;
-            }
-            minMax(arr, n);
+            if (!checkArray(isArrayEntered)) continue;
+            cout << "Max: " << MaxVal(arr, n) << endl;
+            cout << "Min: " << MinVal(arr, n) << endl;
+            pause();
             break;
 
         case 5:
-            if (!isArrayEntered) {
-                cout << "Array is empty. Please choose option 1 first.\n";
-                continue;
-            }
+            if (!checkArray(isArrayEntered)) continue;
             cout << "Average: " << averageArray(arr, n) << endl;
+            pause();
             break;
 
         case 6:
-            if (!isArrayEntered) {
-                cout << "Array is empty. Please choose option 1 first.\n";
-                continue;
-            }
+            if (!checkArray(isArrayEntered)) continue;
             int maxsub;
             maxsub = maxAscendingSubsequence(arr, n);
             cout << "Length of max ascending subsequence: " << maxsub << endl;
             cout << "Subsequence: ";
             printArray(arrsub, maxsub);
+            pause();
+            break;
+        
+        case 7:
+            if (!checkArray(isArrayEntered)) continue;
+            ReverseArray(arr, n);
+            cout << "Your reverse array: ";
+            printArray(arr, n);
+            pause();
+            break;
+       
+        case 8:
+            if (!checkArray(isArrayEntered)) continue;
+            sort(arr, n);
+            cout << "Your sort array: ";
+            printArray(arr, n);
+            pause();
+            break;
+        
+        case 9:
+            if (!checkArray(isArrayEntered)) continue;
+            ClearArray(arr, n);
+            cout << "Your array clean!" << endl;
+            n = 0;
+            isArrayEntered = false;
+            pause();
             break;
 
         case 0:
